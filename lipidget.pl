@@ -1,6 +1,43 @@
 #! /usr/bin/perl -w
-#use strict;
-#use warnings;
+use strict;
+use warnings;
+use autodie;
+
+sub load_dat {
+	my($input) = @_;
+	my $cnt = 0;
+	my @headers = ();
+	my @values  = ();
+	while(<$input>)
+	{
+		if ($cnt eq 0)
+		{
+			$_=~s/\",\"/\"!!\"/g;
+			$_=~s/\"//g;
+			@headers=split("!!",$_);
+		}
+		if ($cnt eq 1)
+		{
+			$_=~s/\",\"/\"!!\"/g;
+			$_=~s/\"//g;
+			@values=split("!!",$_);
+		}
+		$cnt = $cnt +1;		
+	}
+	return (\@headers, \@values);
+}
+
+sub show_dat {
+	my($first, $second) = @_;
+	my @headers = @{ $first };
+	my @values = @{ $second };
+	for (my $i=0;$i<$#headers;$i++)
+	{
+		print "\e[31m";
+		printf("\n%-20s\e[32m%-20s","$headers[$i]","$values[$i]");
+		print "\e[31m";
+	}
+}
 
 if (not @ARGV  or grep(/-h/,@ARGV))
 {
@@ -24,31 +61,9 @@ if ( grep(/\-csv/, @ARGV))
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id","&OutputType=CSV&OutputQuote=Yes");
 	open my $input, "-|", "wget -q -O - \"$url\"";
-	my $cnt = 0;
-	my @headers=();
-	my @values=();
-	while (<$input>)
-	{
-		if ($cnt eq 0)
-		{
-			$_=~s/\",\"/\"!!\"/g;
-			$_=~s/\"//g;
-			@header=split("!!",$_);
-		}
-		if ($cnt eq 1)
-		{
-			$_=~s/\",\"/\"!!\"/g;
-			$_=~s/\"//g;
-			@values=split("!!",$_);
-		}
-		$cnt = $cnt +1;		
-	}
-	for (my $i=0;$i<$#header;$i++)
-	{
-		print "\e[31m";
-		printf("\n%-20s\e[32m%-20s","$header[$i]","$values[$i]");
-		print "\e[31m";
-	}
+	my ($first, $second) = load_dat($input);	
+	show_dat($first,$second);
+	close $input;
 }
 if ( grep(/\-mol/, @ARGV))
 {
