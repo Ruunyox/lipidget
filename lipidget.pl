@@ -5,12 +5,12 @@
 if (not @ARGV  or grep(/-h/,@ARGV))
 {
 	print "\n << LIPIDGET >>\n";
-	print "\n Usage:\n";
-	print "\n\t-s [keyword]\tsearch the LipidMaps database";
-	print "\n\t-csv\tsave fetch to csv format";
-	print "\n\t-mol\tsave fetch to mol format";
-	print "\n\t-sdf\tsave fetch to sdf format";
-	print "\n\t-tsv\tsave fetch to tsv format\n";
+	print "\n Usage: lipidget [opts] [str or LMID]\n";
+	print "\n\t-s [str] search the LipidMaps database";
+	print "\n\t-csv\t save fetch to csv format";
+	print "\n\t-mol\t save fetch to mol format";
+	print "\n\t-sdf\t save fetch to sdf format";
+	print "\n\t-tsv\t save fetch to tsv format\n";
 	exit;
 }
 
@@ -23,29 +23,53 @@ if ( grep(/\-csv/, @ARGV))
 	our $ext = "csv";
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id","&OutputType=CSV&OutputQuote=Yes");
-	my $dl = `wget -O "$filename" "$url"`;
-	print $url;
+	open my $input, "-|", "wget -q -O - \"$url\"";
+	my $cnt = 0;
+	my @headers=();
+	my @values=();
+	while (<$input>)
+	{
+		if ($cnt eq 0)
+		{
+			$_=~s/\",\"/\"!!\"/g;
+			$_=~s/\"//g;
+			@header=split("!!",$_);
+		}
+		if ($cnt eq 1)
+		{
+			$_=~s/\",\"/\"!!\"/g;
+			$_=~s/\"//g;
+			@values=split("!!",$_);
+		}
+		$cnt = $cnt +1;		
+	}
+	for (my $i=0;$i<$#header;$i++)
+	{
+		print "\e[31m";
+		printf("\n%-20s\e[32m%-20s","$header[$i]","$values[$i]");
+		print "\e[31m";
+	}
 }
 if ( grep(/\-mol/, @ARGV))
 {
 	our $ext = "mol";
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id");
-	my $dl = `wget -O $filename $url`;
+	my $dl = `wget -O "$filename" "$url"`;
 }
 if ( grep(/\-sdf/, @ARGV))
 {
 	our $ext = "sdf";
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id");
-	my $dl = `wget -O $filename $url`;
+	my $dl = `wget -O "$filename" "$url"`;
 }
 if ( grep(/\-tsv/, @ARGV))
 {
 	our $ext = "tsv";
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id");
-	my $dl = `wget -O $filename $url`;
+	my $dl = `wget -O "$filename" "$url"`;
 	print $url;
 }
 
@@ -90,5 +114,3 @@ if (grep(/\-s/, @ARGV))
 	print "\n=> @{[$cnt-1]} line(s) read.\n";
 	close $input;	
 }
-
-
