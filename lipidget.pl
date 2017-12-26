@@ -100,7 +100,7 @@ if ( grep(/\-\-mol/, @ARGV))
 	print "Done.\n";
 }
 
-if (grep(/\-s/, @ARGV))
+if (grep(/\-s/, @ARGV) and not grep(/\-\-sdf/, @ARGV))
 {
 	print "\e[36m";
 	print "\n>>> Searching for $id...\n\n";
