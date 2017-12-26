@@ -47,7 +47,6 @@ if (not @ARGV  or grep(/-h/,@ARGV))
 	print "\n\t--csv [LMID]\t save fetch to csv format";
 	print "\n\t--mol [LMID]\t save fetch to mol format";
 	print "\n\t--sdf [LMID]\t save fetch to sdf format";
-	print "\n\t--tsv [LMID]\t save fetch to tsv format\n";
 	exit;
 }
 
@@ -66,20 +65,7 @@ if ( grep(/\-\-csv/, @ARGV))
 	my ($first, $second) = load_dat($input,$delim);	
 	show_dat($first,$second);
 	close $input;
-	print "Done.\n";
-}
-if ( grep(/\-\-tsv/, @ARGV))
-{
-	print ">>> Grabbing tsv ... ";
-	our $ext = "tsv";
-	my $filename = join("","$id",".","$ext");
-	my $url = join("","$database","$id");
-	my $delim = "\t";
-	open my $input, "-|", "wget -q -O - \"$url\"";
-	my ($first, $second) = load_dat($input,$delim);	
-	show_dat($first,$second);
-	close $input;
-	print "Done.\n";
+	print "\nDone.\n";
 }
 if ( grep(/\-\-sdf/, @ARGV))
 {

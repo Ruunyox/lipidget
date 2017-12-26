@@ -17,6 +17,5 @@ See -h flag for usage:
 	--csv [LMID]	 save fetch to csv format
 	--mol [LMID]	 save fetch to mol format
 	--sdf [LMID]	 save fetch to sdf format
-	--tsv [LMID]	 save fetch to tsv format
 ```
 
