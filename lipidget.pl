@@ -56,7 +56,8 @@ our $datasearch = "http://www.lipidmaps.org/data/structure/LMSDSearch.php?Mode=P
 
 if ( grep(/\-\-csv/, @ARGV))
 {
-	print ">>> Grabbing csv ... ";
+	print "\e[36m";
+	print ">>> Grabbing csv ... \n";
 	our $ext = "csv";
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id","&OutputType=CSV&OutputQuote=Yes");
@@ -65,11 +66,12 @@ if ( grep(/\-\-csv/, @ARGV))
 	my ($first, $second) = load_dat($input,$delim);	
 	show_dat($first,$second);
 	close $input;
-	print "\nDone.\n";
+	print "\e[36m";
+	print "\n>>> Done.\n";
 }
 if ( grep(/\-\-sdf/, @ARGV))
 {
-	print ">>> Grabbing sdf ... ";
+	print ">>> Grabbing sdf ... \n\n";
 	our $ext = "sdf";
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id");
@@ -78,7 +80,7 @@ if ( grep(/\-\-sdf/, @ARGV))
 }
 if ( grep(/\-\-mol/, @ARGV))
 {
-	print ">>> Grabbing mol ... ";
+	print ">>> Grabbing mol ... \n\n";
 	our $ext = "mol";
 	my $filename = join("","$id",".","$ext");
 	my $url = join("","$database","$id");
