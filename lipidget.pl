@@ -33,9 +33,7 @@ sub show_dat {
 	my @values = @{ $second };
 	for (my $i=0;$i<$#headers;$i++)
 	{
-		print "\e[31m";
 		printf("\n%-20s\e[32m%-20s","$headers[$i]","$values[$i]");
-		print "\e[31m";
 	}
 }
 
@@ -56,7 +54,6 @@ our $datasearch = "http://www.lipidmaps.org/data/structure/LMSDSearch.php?Mode=P
 
 if ( grep(/\-\-csv/, @ARGV))
 {
-	print "\e[36m";
 	print ">>> Grabbing csv ... \n";
 	our $ext = "csv";
 	my $filename = join("","$id",".","$ext");
@@ -66,7 +63,6 @@ if ( grep(/\-\-csv/, @ARGV))
 	my ($first, $second) = load_dat($input,$delim);	
 	show_dat($first,$second);
 	close $input;
-	print "\e[36m";
 	print "\n>>> Done.\n";
 }
 if ( grep(/\-\-sdf/, @ARGV))
@@ -106,11 +102,8 @@ if (grep(/\-s/, @ARGV) and not grep(/\-\-sdf/, @ARGV))
 			push(@headers, $line[1]);
 			$headers[0]=~s/\"//g;
 			$headers[1]=~s/\"//g;
-			print "\e[31m";
 			print "$headers[0]\t\t";
-			print "\e[32m";
 			print "$headers[1]\n\n";
-			print "\e[31m";
 		}
 		else
 		{
@@ -118,15 +111,11 @@ if (grep(/\-s/, @ARGV) and not grep(/\-\-sdf/, @ARGV))
 			my @res =($line[0],$line[1]);
 			$res[0]=~s/\"//g;
 			$res[1]=~s/\"//g;
-			print "\e[31m";
 			print "$res[0]\t";
-			print "\e[32m";
 			print "$res[1]\n";
-			print "\e[31m";
 		}	
 		$cnt = $cnt + 1;
 	}
-	print "\e[36m";
 	print "\n>>> @{[$cnt-1]} Entries Found\n";
 	close $input;	
 }
