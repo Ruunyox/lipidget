@@ -1,4 +1,4 @@
-# LipidGet
+# lipidget
 ### Commandline access to the LipidMaps structure and properties database.
 
 ---
